@@ -1,6 +1,8 @@
 # Study Session Schedule Maker
 
 A weekly study schedule maker for **Steady Readers Tech Study Club**.
+link to the Telegram Study Club group: https://t.me/steadyreaders 
+don't hesitate to join
 
 Built with React + Vite + TypeScript + Tailwind CSS.
 
@@ -20,24 +22,10 @@ npm install
 npm run dev
 ```
 
-## Build for Production
-
-```bash
-npm run build
-npm run preview
-```
-
-## Deploy to GitHub Pages
-
-```bash
-npm run build
-# Upload contents of `dist/` folder
-```
-
----
-
 ## Future Considerations
-
+### Essential Features
+- [ ]  **Schedule History** - save previous schedules in github repo as json files
+- [ ]  **Schedule card updates** - add tags for cancelled, rescheduled sessions
 ### 🎨 Customization Features
 - [ ] **Draggable Programming Stickers** — Terminal, Git, Bug, Coffee icons that can be placed anywhere, resized, and rotated
 - [ ] **Per-Day Color Picker** — Preset palette to customize each day's color
@@ -48,7 +36,9 @@ npm run build
 - [ ] **Group Name Header** — Display "Steady Readers Tech Study Club" at top
 - [ ] **Creator Name Footer** — "Printed by: [Name]" field
 
-### 📱 Enhancements
+### 📱 Mobile Enhancements
 - [ ] Mobile-optimized editing
-- [ ] Dark mode theme
-- [ ] Multiple schedule templates
+- [ ] dark mode theme
+
+### 📚 Schedule Enhancements
+- [ ] multiple schedule templates
