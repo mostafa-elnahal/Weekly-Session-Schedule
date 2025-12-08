@@ -1,11 +1,9 @@
 # Study Session Schedule Maker
 
 A weekly study schedule maker for **Steady Readers Tech Study Club**.
-link to the Telegram Study Club group: https://t.me/steadyreaders 
-don't hesitate to join
-
 Built with React + Vite + TypeScript + Tailwind CSS.
-
+link to the Telegram Study Club group: [Steady Readers Tech Study Club](https://t.me/+rCVIsMal9Mw1Mjhk)
+don't hesitate to join us! ❤️
 ## Features
 
 - 📅 7-day vertical schedule with colorful cards
