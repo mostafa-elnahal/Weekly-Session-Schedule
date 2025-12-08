@@ -25,6 +25,7 @@ npm run dev
 ## Future Considerations
 ### Essential Features
 - [ ]  **Schedule History** - save previous schedules in github repo as json files
+- [ ]  **History navigation** - add arrow buttons to navigate between schedules
 - [ ]  **Schedule card updates** - add tags for cancelled, rescheduled sessions
 ### 🎨 Customization Features
 - [ ] **Draggable Programming Stickers** — Terminal, Git, Bug, Coffee icons that can be placed anywhere, resized, and rotated
