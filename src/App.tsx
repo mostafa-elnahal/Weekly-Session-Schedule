@@ -1,7 +1,8 @@
 import { useState, useCallback } from 'react';
-import { Eye, EyeOff, RotateCcw } from 'lucide-react';
+import { Eye, EyeOff, Settings } from 'lucide-react';
 import { ScheduleGrid } from './components/ScheduleGrid';
 import { ExportButton } from './components/ExportButton';
+import { SettingsDialog } from './components/SettingsDialog';
 import { useLocalStorage, saveToLocalStorageImmediate } from './hooks/useLocalStorage';
 import {
     WeekSchedule,
@@ -14,7 +15,7 @@ import {
 const SCHEDULE_KEY = 'study-schedule-data';
 const SUGGESTIONS_KEY = 'study-schedule-suggestions';
 
-// Custom GitHub icon component
+// Custom GitHub icon component (make it smaller)
 const GitHubIcon = ({ className }: { className?: string }) => (
     <svg
         className={className}
@@ -41,6 +42,7 @@ function App() {
     );
 
     const [isPreview, setIsPreview] = useState(false);
+    const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
     const extractCurrentSuggestions = useCallback(() => {
         const titles = new Set<string>();
@@ -71,10 +73,8 @@ function App() {
     }, [extractCurrentSuggestions, suggestions, setSuggestions]);
 
     const handleReset = () => {
-        if (confirm('Clear the schedule?')) {
-            setSchedule(createEmptySchedule());
-            setWeekStartDate(getCurrentWeekStart());
-        }
+        setSchedule(createEmptySchedule());
+        setWeekStartDate(getCurrentWeekStart());
     };
 
     return (
@@ -103,7 +103,7 @@ function App() {
                 </div>
 
                 {/* Actions */}
-                <div className="flex items-center justify-center gap-3 mb-8">
+                <div className="relative flex items-center justify-center gap-3 mb-8 w-full max-w-4xl mx-auto">
                     <button
                         onClick={() => setIsPreview(!isPreview)}
                         className="inline-flex items-center justify-center gap-2 rounded-lg bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm ring-1 ring-inset ring-slate-300 hover:bg-slate-50 transition-all active:scale-95"
@@ -111,28 +111,28 @@ function App() {
                         {isPreview ? (
                             <>
                                 <EyeOff className="w-4 h-4" />
-                                Edit
+                                <span className="hidden sm:inline">Edit</span>
                             </>
                         ) : (
                             <>
                                 <Eye className="w-4 h-4" />
-                                Preview
+                                <span className="hidden sm:inline">Preview</span>
                             </>
                         )}
-                    </button>
-
-                    <button
-                        onClick={handleReset}
-                        className="inline-flex items-center justify-center gap-2 rounded-lg bg-red-50 px-4 py-2.5 text-sm font-semibold text-red-600 shadow-sm ring-1 ring-inset ring-red-200 hover:bg-red-100 transition-all active:scale-95"
-                    >
-                        <RotateCcw className="w-4 h-4" />
-                        Reset
                     </button>
 
                     <ExportButton
                         onBeforeExport={handleBeforeExport}
                         weekStartDate={weekStartDate}
                     />
+
+                    <button
+                        onClick={() => setIsSettingsOpen(true)}
+                        className="absolute right-0 top-1/2 -translate-y-1/2 inline-flex items-center justify-center p-2.5 rounded-lg bg-white text-slate-700 shadow-sm ring-1 ring-inset ring-slate-300 hover:bg-slate-50 transition-all active:scale-95"
+                        aria-label="Settings"
+                    >
+                        <Settings className="w-5 h-5" />
+                    </button>
                 </div>
 
                 {/* Schedule */}
@@ -144,6 +144,12 @@ function App() {
                     isPreview={isPreview}
                     titleSuggestions={suggestions.titles}
                     presenterSuggestions={suggestions.presenters}
+                />
+
+                <SettingsDialog
+                    isOpen={isSettingsOpen}
+                    onClose={() => setIsSettingsOpen(false)}
+                    onResetSchedule={handleReset}
                 />
             </div>
         </div>
