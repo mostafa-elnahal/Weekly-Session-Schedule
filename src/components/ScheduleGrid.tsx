@@ -9,6 +9,8 @@ interface ScheduleGridProps {
     isPreview: boolean;
     titleSuggestions: string[];
     presenterSuggestions: string[];
+    exportContainerId?: string;
+    days: { name: DayName; date: Date }[];
 }
 
 export const ScheduleGrid = ({
@@ -19,6 +21,8 @@ export const ScheduleGrid = ({
     isPreview,
     titleSuggestions,
     presenterSuggestions,
+    exportContainerId = 'export-container',
+    days,
 }: ScheduleGridProps) => {
     const handleDaySessionChange = (dayName: DayName, session: DaySession) => {
         onScheduleChange({
@@ -27,11 +31,13 @@ export const ScheduleGrid = ({
         });
     };
 
-    const startDate = new Date(weekStartDate);
-    const endDate = new Date(startDate);
-    endDate.setDate(startDate.getDate() + 6);
-
     const formatRange = () => {
+        if (days.length === 0) return '';
+
+        const sortedDates = [...days].map(d => d.date).sort((a, b) => a.getTime() - b.getTime());
+        const startDate = sortedDates[0];
+        const endDate = sortedDates[sortedDates.length - 1];
+
         const startMonth = startDate.toLocaleDateString('en-US', { month: 'long' });
         const endMonth = endDate.toLocaleDateString('en-US', { month: 'long' });
         const year = startDate.getFullYear();
@@ -62,7 +68,7 @@ export const ScheduleGrid = ({
 
             {/* Export Container */}
             <div
-                id="export-container"
+                id={exportContainerId}
                 className="overflow-hidden rounded-2xl bg-white shadow-xl ring-1 ring-slate-900/5"
                 style={{ background: '#ffffff' }}
             >
@@ -74,11 +80,11 @@ export const ScheduleGrid = ({
 
                 {/* Days List */}
                 <div className="flex flex-col gap-3 p-4 sm:p-6 bg-slate-50/30">
-                    {DAY_NAMES.map((dayName, index) => (
+                    {days.map(({ name: dayName, date }) => (
                         <DayCard
                             key={dayName}
                             dayName={dayName}
-                            date={getDateForDay(weekStartDate, index)}
+                            date={date}
                             session={schedule[dayName]}
                             onSessionChange={(session) => handleDaySessionChange(dayName, session)}
                             isPreview={isPreview}
@@ -86,6 +92,11 @@ export const ScheduleGrid = ({
                             presenterSuggestions={presenterSuggestions}
                         />
                     ))}
+                    {days.length === 0 && (
+                        <div className="text-center py-8 text-slate-400 font-medium italic">
+                            No days selected. Check settings.
+                        </div>
+                    )}
                 </div>
 
                 {/* Footer */}

@@ -1,4 +1,5 @@
 import { DaySession, formatDateShort } from '../types';
+import { render } from '@croct/md-lite';
 
 interface DayCardProps {
     dayName: string;
@@ -18,6 +19,23 @@ const dayColorMap: Record<string, string> = {
     Thursday: 'bg-gradient-to-br from-indigo-100 to-indigo-200 border-indigo-200',
     Friday: 'bg-gradient-to-br from-orange-100 to-orange-200 border-orange-200',
     Saturday: 'bg-gradient-to-br from-teal-100 to-teal-200 border-teal-200',
+};
+
+// Helper to render markdown to JSX
+const renderMarkdown = (text: string) => {
+    if (!text) return null;
+
+    return render(text, {
+        fragment: (node: any) => <>{node.children}</>,
+        text: (node: any) => <>{node.content}</>,
+        bold: (node: any) => <b key={Math.random()}>{node.children}</b>,
+        italic: (node: any) => <i key={Math.random()}>{node.children}</i>,
+        strike: (node: any) => <s key={Math.random()}>{node.children}</s>,
+        code: (node: any) => <code key={Math.random()} className="bg-slate-100 rounded px-1 py-0.5 text-xs font-mono">{node.content}</code>,
+        link: (node: any) => <a key={Math.random()} href={node.href} target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline">{node.children}</a>,
+        image: (node: any) => <span key={Math.random()} title={node.alt}>[Image: {node.alt}]</span>, // Simple fallback for images
+        paragraph: (node: any) => <span key={Math.random()}>{node.children}</span>, // Inline paragraphs
+    });
 };
 
 export const DayCard = ({
@@ -51,7 +69,7 @@ export const DayCard = ({
                     <label className="text-[0.65rem] font-bold uppercase tracking-wider text-slate-500">Topic</label>
                     {isPreview ? (
                         <div className="text-sm font-bold text-slate-800 whitespace-pre-wrap break-words leading-snug">
-                            {session.title || <span className="text-slate-300">—</span>}
+                            {session.title ? renderMarkdown(session.title) : <span className="text-slate-300">—</span>}
                         </div>
                     ) : (
                         <textarea
@@ -69,7 +87,7 @@ export const DayCard = ({
                     <label className="text-[0.65rem] font-bold uppercase tracking-wider text-slate-500">Presenter</label>
                     {isPreview ? (
                         <div className="text-sm font-semibold text-slate-700 whitespace-pre-wrap break-words">
-                            {session.presenter || <span className="text-slate-300">—</span>}
+                            {session.presenter ? renderMarkdown(session.presenter) : <span className="text-slate-300">—</span>}
                         </div>
                     ) : (
                         <textarea
@@ -87,7 +105,7 @@ export const DayCard = ({
                     <label className="text-[0.65rem] font-bold uppercase tracking-wider text-slate-500">Backup</label>
                     {isPreview ? (
                         <div className="text-sm font-medium text-slate-600 whitespace-pre-wrap break-words">
-                            {session.backupPresenter || <span className="text-slate-300">—</span>}
+                            {session.backupPresenter ? renderMarkdown(session.backupPresenter) : <span className="text-slate-300">—</span>}
                         </div>
                     ) : (
                         <textarea

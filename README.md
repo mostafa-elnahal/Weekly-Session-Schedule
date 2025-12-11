@@ -8,10 +8,15 @@ don't hesitate to join us! ❤️
 
 - 📅 7-day vertical schedule with colorful cards
 - ✏️ Title, Presenter, and Time fields per day
-- 💾 Auto-saves to localStorage
 - 👁️ Preview mode for export preview
 - 📸 Export as high-quality JPG (2x resolution)
-- 🎨 modern card like design
+- 💾 Auto-saves to localStorage
+- 📝 **Markdown Support** in text fields:
+  - `**bold**` -> **bold**
+  - `*italic*` -> *italic*
+  - `~~strike~~` -> ~~strike~~
+  - `[link](url)` -> [link](#)
+  - `` `code` `` -> `code`
 
 ## Quick Start
 

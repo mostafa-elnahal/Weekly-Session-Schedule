@@ -41,13 +41,33 @@ export const createEmptySchedule = (): WeekSchedule => ({
     Saturday: createEmptySession(),
 });
 
-// Get the Sunday of the current week
+// Helper to get the most recent Saturday (or today if it's Saturday)
 export const getCurrentWeekStart = (): string => {
-    const today = new Date();
-    const day = today.getDay(); // 0 = Sunday
-    const diff = today.getDate() - day; // Go back to Sunday
-    const sunday = new Date(today.setDate(diff));
-    return sunday.toISOString().split('T')[0];
+    const now = new Date();
+    const day = now.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+    // We want Saturday to be index 0 relative to our week.
+    // If today is Saturday (6), diff is 0.
+    // If today is Sunday (0), diff is 1.
+    // If today is Friday (5), diff is 6.
+    const diff = (day + 1) % 7;
+
+    // Create new date to avoid mutating original
+    const saturday = new Date(now);
+    saturday.setDate(now.getDate() - diff);
+
+    return saturday.toISOString().split('T')[0];
+};
+
+// Helper to snap any date to the previous Saturday
+export const snapToSaturday = (dateString: string): string => {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return getCurrentWeekStart();
+
+    const day = date.getDay(); // 0 = Sunday, ..., 6 = Saturday
+    const diff = (day + 1) % 7;
+
+    date.setDate(date.getDate() - diff);
+    return date.toISOString().split('T')[0];
 };
 
 export const formatDateShort = (date: Date): string => {
@@ -59,4 +79,12 @@ export const getDateForDay = (weekStartDate: string, dayIndex: number): Date => 
     const date = new Date(startDate);
     date.setDate(startDate.getDate() + dayIndex);
     return date;
+};
+
+export interface AppSettings {
+    visibleDays: DayName[];
+}
+
+export const DEFAULT_SETTINGS: AppSettings = {
+    visibleDays: ['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
 };

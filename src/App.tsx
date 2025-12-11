@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { Eye, EyeOff, Settings } from 'lucide-react';
 import { ScheduleGrid } from './components/ScheduleGrid';
 import { ExportButton } from './components/ExportButton';
@@ -10,10 +10,16 @@ import {
     createEmptySchedule,
     getCurrentWeekStart,
     DAY_NAMES,
+    AppSettings,
+    DEFAULT_SETTINGS,
+    getDateForDay,
+    DayName,
+    snapToSaturday,
 } from './types';
 
 const SCHEDULE_KEY = 'study-schedule-data';
 const SUGGESTIONS_KEY = 'study-schedule-suggestions';
+const SETTINGS_KEY = 'study-schedule-settings';
 
 // Custom GitHub icon component (make it smaller)
 const GitHubIcon = ({ className }: { className?: string }) => (
@@ -28,6 +34,7 @@ const GitHubIcon = ({ className }: { className?: string }) => (
 );
 
 function App() {
+    // Initial load ensures start date is valid Saturday
     const [weekStartDate, setWeekStartDate] = useLocalStorage<string>(
         'study-schedule-week-start',
         getCurrentWeekStart()
@@ -40,9 +47,42 @@ function App() {
         SUGGESTIONS_KEY,
         { titles: [], presenters: [] }
     );
+    const [settings, setSettings] = useLocalStorage<AppSettings>(
+        SETTINGS_KEY,
+        DEFAULT_SETTINGS
+    );
 
     const [isPreview, setIsPreview] = useState(false);
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+
+    // Compute the list of days to display based on settings
+    const displayDays = useMemo(() => {
+        // 1. Order days always starting from Saturday
+        const orderedDays = [
+            'Saturday',
+            'Sunday',
+            'Monday',
+            'Tuesday',
+            'Wednesday',
+            'Thursday',
+            'Friday',
+        ];
+
+        // 2. Map to objects with calculated dates and filter
+        return orderedDays
+            .map((dayName, index) => ({
+                name: dayName as DayName,
+                // The date is simply the week start date (Saturday) + index
+                date: getDateForDay(weekStartDate, index),
+            }))
+            .filter((day) => settings.visibleDays.includes(day.name));
+    }, [settings.visibleDays, weekStartDate]);
+
+    // Handle Date Picker Change (Snap to Saturday)
+    const handleWeekStartChange = useCallback((date: string) => {
+        const snappedDate = snapToSaturday(date);
+        setWeekStartDate(snappedDate);
+    }, [setWeekStartDate]);
 
     const extractCurrentSuggestions = useCallback(() => {
         const titles = new Set<string>();
@@ -124,6 +164,7 @@ function App() {
                     <ExportButton
                         onBeforeExport={handleBeforeExport}
                         weekStartDate={weekStartDate}
+                        targetId="hidden-export-schedule"
                     />
 
                     <button
@@ -138,18 +179,36 @@ function App() {
                 {/* Schedule */}
                 <ScheduleGrid
                     weekStartDate={weekStartDate}
-                    onWeekStartDateChange={setWeekStartDate}
+                    onWeekStartDateChange={handleWeekStartChange}
                     schedule={schedule}
                     onScheduleChange={setSchedule}
                     isPreview={isPreview}
                     titleSuggestions={suggestions.titles}
                     presenterSuggestions={suggestions.presenters}
+                    days={displayDays}
                 />
+
+                {/* Hidden Schedule for Export (Always in Preview Mode) */}
+                <div className="absolute -left-[9999px] top-0">
+                    <ScheduleGrid
+                        exportContainerId="hidden-export-schedule"
+                        weekStartDate={weekStartDate}
+                        onWeekStartDateChange={() => { }}
+                        schedule={schedule}
+                        onScheduleChange={() => { }}
+                        isPreview={true}
+                        titleSuggestions={[]}
+                        presenterSuggestions={[]}
+                        days={displayDays}
+                    />
+                </div>
 
                 <SettingsDialog
                     isOpen={isSettingsOpen}
                     onClose={() => setIsSettingsOpen(false)}
                     onResetSchedule={handleReset}
+                    settings={settings}
+                    onSettingsChange={setSettings}
                 />
             </div>
         </div>

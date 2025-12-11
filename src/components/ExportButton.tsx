@@ -5,11 +5,13 @@ import { toJpeg } from 'html-to-image';
 interface ExportButtonProps {
     onBeforeExport: () => void;
     weekStartDate: string;
+    targetId?: string;
 }
 
 export const ExportButton = ({
     onBeforeExport,
     weekStartDate,
+    targetId = 'export-container',
 }: ExportButtonProps) => {
     const [isExporting, setIsExporting] = useState(false);
 
@@ -21,7 +23,7 @@ export const ExportButton = ({
             // Small delay to ensure state updates are rendered
             await new Promise((resolve) => setTimeout(resolve, 100));
 
-            const exportContainer = document.getElementById('export-container');
+            const exportContainer = document.getElementById(targetId);
             if (!exportContainer) {
                 throw new Error('Export container not found');
             }
