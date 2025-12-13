@@ -1,5 +1,5 @@
 import { DayCard } from './DayCard';
-import { DAY_NAMES, DayName, WeekSchedule, DaySession, getDateForDay } from '../types';
+import { DayName, WeekSchedule, DaySession } from '../types';
 
 interface ScheduleGridProps {
     weekStartDate: string;

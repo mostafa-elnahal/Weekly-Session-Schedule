@@ -1,6 +1,6 @@
 import { X, Trash2 } from 'lucide-react';
 import { useEffect, useRef } from 'react';
-import { AppSettings, DAY_NAMES, DayName } from '../types';
+import { AppSettings, DayName } from '../types';
 
 interface SettingsDialogProps {
     isOpen: boolean;
