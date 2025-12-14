@@ -36,13 +36,8 @@ npm run dev
 - [ ] **Background Patterns** — Circuit board, Dots, Grid, Paper textures
 - [ ] **Custom Backgrounds** — Allow users to upload their own background images
 
-### 🏷️ Branding
-- [ ] **Group Name Header** — Display "Steady Readers Tech Study Club" at top
-- [ ] **Creator Name Footer** — "Printed by: [Name]" field
-
 ### 📱 Mobile Enhancements
 - [ ] Mobile-optimized editing
-- [ ] dark mode theme
 
 ### 📚 Schedule Enhancements
 - [ ] multiple schedule templates
