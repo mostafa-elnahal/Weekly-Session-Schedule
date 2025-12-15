@@ -54,6 +54,8 @@ function App() {
 
     const [isPreview, setIsPreview] = useState(false);
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+    // Add state to track if export grid should be mounted
+    const [isExportGridMounted, setIsExportGridMounted] = useState(false);
 
     // Compute the list of days to display based on settings
     const displayDays = useMemo(() => {
@@ -99,6 +101,11 @@ function App() {
     }, [schedule]);
 
     const handleBeforeExport = useCallback(() => {
+        // Mount the export grid if it's not already mounted
+        if (!isExportGridMounted) {
+            setIsExportGridMounted(true);
+        }
+
         const current = extractCurrentSuggestions();
         const mergedTitles = [...new Set([...suggestions.titles, ...current.titles])];
         const mergedPresenters = [...new Set([...suggestions.presenters, ...current.presenters])];
@@ -188,20 +195,22 @@ function App() {
                     days={displayDays}
                 />
 
-                {/* Hidden Schedule for Export (Always in Preview Mode) */}
-                <div className="absolute -left-[9999px] top-0">
-                    <ScheduleGrid
-                        exportContainerId="hidden-export-schedule"
-                        weekStartDate={weekStartDate}
-                        onWeekStartDateChange={() => { }}
-                        schedule={schedule}
-                        onScheduleChange={() => { }}
-                        isPreview={true}
-                        titleSuggestions={[]}
-                        presenterSuggestions={[]}
-                        days={displayDays}
-                    />
-                </div>
+                {/* Hidden Schedule for Export (Always in Preview Mode) - Lazy Loaded */}
+                {isExportGridMounted && (
+                    <div className="absolute -left-[9999px] top-0">
+                        <ScheduleGrid
+                            exportContainerId="hidden-export-schedule"
+                            weekStartDate={weekStartDate}
+                            onWeekStartDateChange={() => { }}
+                            schedule={schedule}
+                            onScheduleChange={() => { }}
+                            isPreview={true}
+                            titleSuggestions={[]}
+                            presenterSuggestions={[]}
+                            days={displayDays}
+                        />
+                    </div>
+                )}
 
                 <SettingsDialog
                     isOpen={isSettingsOpen}

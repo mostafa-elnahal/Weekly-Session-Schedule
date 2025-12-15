@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Download, Loader2 } from 'lucide-react';
-import { toJpeg } from 'html-to-image';
+
 
 interface ExportButtonProps {
     onBeforeExport: () => void;
@@ -27,6 +27,9 @@ export const ExportButton = ({
             if (!exportContainer) {
                 throw new Error('Export container not found');
             }
+
+            // Dynamically import html-to-image
+            const { toJpeg } = await import('html-to-image');
 
             const dataUrl = await toJpeg(exportContainer, {
                 quality: 0.95,
