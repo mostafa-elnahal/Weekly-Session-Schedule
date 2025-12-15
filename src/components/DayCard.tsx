@@ -68,7 +68,7 @@ export const DayCard = ({
                 <div className="flex flex-col gap-1">
                     <label className="text-[0.65rem] font-bold uppercase tracking-wider text-slate-500">Topic</label>
                     {isPreview ? (
-                        <div className="text-sm font-bold text-slate-800 whitespace-pre-wrap break-words leading-snug">
+                        <div className="text-sm font-normal text-slate-800 whitespace-pre-wrap break-words leading-snug">
                             {session.title ? renderMarkdown(session.title) : <span className="text-slate-300">—</span>}
                         </div>
                     ) : (
@@ -76,7 +76,7 @@ export const DayCard = ({
                             value={session.title}
                             onChange={(e) => handleChange('title', e.target.value)}
                             placeholder="Session topic..."
-                            className="w-full rounded-md border-0 bg-slate-50 px-2.5 py-1.5 text-sm font-semibold text-slate-800 placeholder-slate-400 ring-1 ring-inset ring-slate-200 focus:ring-2 focus:ring-inset focus:ring-indigo-500 resize-none"
+                            className="w-full rounded-md border-0 bg-slate-50 px-2.5 py-1.5 text-sm font-normal text-slate-800 placeholder-slate-400 ring-1 ring-inset ring-slate-200 focus:ring-2 focus:ring-inset focus:ring-indigo-500 resize-none"
                             rows={2}
                         />
                     )}
@@ -86,7 +86,7 @@ export const DayCard = ({
                 <div className="flex flex-col gap-1">
                     <label className="text-[0.65rem] font-bold uppercase tracking-wider text-slate-500">Presenter</label>
                     {isPreview ? (
-                        <div className="text-sm font-semibold text-slate-700 whitespace-pre-wrap break-words">
+                        <div className="text-sm font-normal text-slate-700 whitespace-pre-wrap break-words">
                             {session.presenter ? renderMarkdown(session.presenter) : <span className="text-slate-300">—</span>}
                         </div>
                     ) : (
@@ -94,7 +94,7 @@ export const DayCard = ({
                             value={session.presenter}
                             onChange={(e) => handleChange('presenter', e.target.value)}
                             placeholder="Name"
-                            className="w-full rounded-md border-0 bg-slate-50 px-2.5 py-1.5 text-sm font-medium text-slate-800 placeholder-slate-400 ring-1 ring-inset ring-slate-200 focus:ring-2 focus:ring-inset focus:ring-indigo-500 resize-none"
+                            className="w-full rounded-md border-0 bg-slate-50 px-2.5 py-1.5 text-sm font-normal text-slate-800 placeholder-slate-400 ring-1 ring-inset ring-slate-200 focus:ring-2 focus:ring-inset focus:ring-indigo-500 resize-none"
                             rows={2}
                         />
                     )}
