@@ -1,5 +1,6 @@
 import { DaySession, formatDateShort } from '../types';
 import { render } from '@croct/md-lite';
+import { useLayoutEffect, useRef, TextareaHTMLAttributes } from 'react';
 
 interface DayCardProps {
     dayName: string;
@@ -38,6 +39,26 @@ const renderMarkdown = (text: string) => {
     });
 };
 
+const AutoResizeTextarea = (props: TextareaHTMLAttributes<HTMLTextAreaElement>) => {
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+    useLayoutEffect(() => {
+        if (textareaRef.current) {
+            textareaRef.current.style.height = 'auto';
+            textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+        }
+    }, [props.value]);
+
+    return (
+        <textarea
+            {...props}
+            ref={textareaRef}
+            rows={1}
+            className={`${props.className} overflow-hidden resize-none`}
+        />
+    );
+};
+
 export const DayCard = ({
     dayName,
     date,
@@ -72,12 +93,11 @@ export const DayCard = ({
                             {session.title ? renderMarkdown(session.title) : <span className="text-slate-300">—</span>}
                         </div>
                     ) : (
-                        <textarea
+                        <AutoResizeTextarea
                             value={session.title}
                             onChange={(e) => handleChange('title', e.target.value)}
                             placeholder="Session topic..."
-                            className="w-full rounded-md border-0 bg-slate-50 px-2.5 py-1.5 text-sm font-normal text-slate-800 placeholder-slate-400 ring-1 ring-inset ring-slate-200 focus:ring-2 focus:ring-inset focus:ring-indigo-500 resize-none"
-                            rows={2}
+                            className="w-full rounded-md border-0 bg-slate-50 px-2.5 py-1.5 text-sm font-normal text-slate-800 placeholder-slate-400 ring-1 ring-inset ring-slate-200 focus:ring-2 focus:ring-inset focus:ring-indigo-500"
                         />
                     )}
                 </div>
@@ -90,12 +110,11 @@ export const DayCard = ({
                             {session.presenter ? renderMarkdown(session.presenter) : <span className="text-slate-300">—</span>}
                         </div>
                     ) : (
-                        <textarea
+                        <AutoResizeTextarea
                             value={session.presenter}
                             onChange={(e) => handleChange('presenter', e.target.value)}
                             placeholder="Name"
-                            className="w-full rounded-md border-0 bg-slate-50 px-2.5 py-1.5 text-sm font-normal text-slate-800 placeholder-slate-400 ring-1 ring-inset ring-slate-200 focus:ring-2 focus:ring-inset focus:ring-indigo-500 resize-none"
-                            rows={2}
+                            className="w-full rounded-md border-0 bg-slate-50 px-2.5 py-1.5 text-sm font-normal text-slate-800 placeholder-slate-400 ring-1 ring-inset ring-slate-200 focus:ring-2 focus:ring-inset focus:ring-indigo-500"
                         />
                     )}
                 </div>
@@ -108,12 +127,11 @@ export const DayCard = ({
                             {session.backupPresenter ? renderMarkdown(session.backupPresenter) : <span className="text-slate-300">—</span>}
                         </div>
                     ) : (
-                        <textarea
+                        <AutoResizeTextarea
                             value={session.backupPresenter || ''}
                             onChange={(e) => handleChange('backupPresenter', e.target.value)}
                             placeholder="Backup"
-                            className="w-full rounded-md border-0 bg-slate-50 px-2.5 py-1.5 text-sm font-medium text-slate-800 placeholder-slate-400 ring-1 ring-inset ring-slate-200 focus:ring-2 focus:ring-inset focus:ring-indigo-500 resize-none"
-                            rows={2}
+                            className="w-full rounded-md border-0 bg-slate-50 px-2.5 py-1.5 text-sm font-medium text-slate-800 placeholder-slate-400 ring-1 ring-inset ring-slate-200 focus:ring-2 focus:ring-inset focus:ring-indigo-500"
                         />
                     )}
                 </div>
